@@ -13,7 +13,7 @@ including the problem statement, methodology, and results.
 Keep it concise (150–250 words).
 ```
 
-## introduction
+## Introduction
 ```
 Describe the background, motivation,
 and objectives of the project. 
