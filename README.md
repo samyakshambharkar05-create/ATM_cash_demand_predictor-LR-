@@ -1,4 +1,3 @@
-# Project-5
 # Project Title
 ```
 Author(s): Your Name(s)
