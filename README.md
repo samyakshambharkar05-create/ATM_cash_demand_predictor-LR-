@@ -31,7 +31,7 @@ Explain how your system works.(100 words)
 ```
 
 
-## implementation
+## Implementation
 ```
 Provide technical details:
 Programming languages
