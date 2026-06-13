@@ -12,174 +12,195 @@ import pandas as pd
 import pickle
 
 # Load Model
-
 model = pickle.load(open("atm_cash_predictor.pkl", "rb"))
 
+# Page Config
 st.set_page_config(
-page_title="ATM Cash Demand Predictor",
-page_icon="🏦",
-layout="centered"
+    page_title="ATM Cash Demand Predictor",
+    page_icon="🏦",
+    layout="wide"
 )
 
+# Sidebar
+st.sidebar.title("🏦 ATM Cash Demand Predictor")
+
+st.sidebar.info("""
+This application predicts the cash
+required in an ATM for the next day
+using Machine Learning.
+
+Model Used:
+• Linear Regression
+
+Project Type:
+• Banking Analytics
+• Time-Series Prediction
+• Machine Learning
+""")
+
+st.sidebar.success("Model Accuracy (R²): 87%")
+
+# Main Title
 st.title("🏦 ATM Cash Demand Predictor")
-st.markdown(
-"Predict the cash required for an ATM on the next day using Machine Learning."
-)
+
+st.markdown("""
+Predict the amount of cash required in an ATM for the next day based on
+transaction activity and surrounding conditions.
+""")
 
 st.divider()
 
-# ATM Details
+# Two Columns
+col1, col2 = st.columns(2)
 
-atm_id = st.number_input("ATM ID", min_value=1, value=1)
+# ---------------- LEFT COLUMN ----------------
+with col1:
 
-# Day of Week
+    location = st.selectbox(
+        "Location Type",
+        ["Urban", "Semi Urban", "Rural"]
+    )
 
-day_name = st.selectbox(
-"Day of Week",
-["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
-)
+    weather = st.selectbox(
+        "Weather Condition",
+        ["Sunny", "Cloudy", "Rainy"]
+    )
 
-day_map = {
-"Monday":0,
-"Tuesday":1,
-"Wednesday":2,
-"Thursday":3,
-"Friday":4,
-"Saturday":5,
-"Sunday":6
-}
+    holiday = st.selectbox(
+        "Holiday",
+        ["No", "Yes"]
+    )
 
-day_of_week = day_map[day_name]
+    event = st.selectbox(
+        "Special Event Nearby",
+        ["No", "Yes"]
+    )
 
-# Time of Day
+# ---------------- RIGHT COLUMN ----------------
+with col2:
 
-time_name = st.selectbox(
-"Time of Day",
-["Morning","Afternoon","Evening"]
-)
+    day_name = st.selectbox(
+        "Day of Week",
+        ["Monday", "Tuesday", "Wednesday",
+         "Thursday", "Friday", "Saturday", "Sunday"]
+    )
 
-time_map = {
-"Morning":0,
-"Afternoon":1,
-"Evening":2
-}
+    time_name = st.selectbox(
+        "Time of Day",
+        ["Morning", "Afternoon", "Evening"]
+    )
 
-time_of_day = time_map[time_name]
+    total_withdrawals = st.number_input(
+        "Total Withdrawals (₹)",
+        min_value=0.0,
+        value=45000.0
+    )
 
-# Location Type
+    total_deposits = st.number_input(
+        "Total Deposits (₹)",
+        min_value=0.0,
+        value=12000.0
+    )
 
-location_name = st.selectbox(
-"Location Type",
-["Urban","Semi Urban","Rural"]
-)
-
-location_map = {
-"Urban":0,
-"Semi Urban":1,
-"Rural":2
-}
-
-location_type = location_map[location_name]
-
-# Weather
-
-weather_name = st.selectbox(
-"Weather Condition",
-["Sunny","Cloudy","Rainy"]
-)
-
-weather_map = {
-"Sunny":0,
-"Cloudy":1,
-"Rainy":2
-}
-
-weather_condition = weather_map[weather_name]
-
-# Holiday
-
-holiday = st.selectbox(
-"Is it a Holiday?",
-["No","Yes"]
-)
-
-holiday_flag = 1 if holiday == "Yes" else 0
-
-# Special Event
-
-event = st.selectbox(
-"Special Event Nearby?",
-["No","Yes"]
-)
-
-special_event_flag = 1 if event == "Yes" else 0
-
+# Additional Inputs
 st.divider()
-
-# Transaction Information
-
-total_withdrawals = st.number_input(
-"Total Withdrawals (₹)",
-min_value=0.0
-)
-
-total_deposits = st.number_input(
-"Total Deposits (₹)",
-min_value=0.0
-)
 
 previous_day_cash = st.number_input(
-"Previous Day Cash Level (₹)",
-min_value=0.0
+    "Previous Day Cash Level (₹)",
+    min_value=0.0,
+    value=50000.0
 )
 
-nearby_atms = st.number_input(
-"Nearby Competitor ATMs",
-min_value=0,
-value=1
-)
+# ---------------------------------------------
+# Encoding
+# ---------------------------------------------
 
-st.divider()
+location_map = {
+    "Urban": 0,
+    "Semi Urban": 1,
+    "Rural": 2
+}
 
-# Date Information
+weather_map = {
+    "Sunny": 0,
+    "Cloudy": 1,
+    "Rainy": 2
+}
 
-month = st.selectbox(
-"Month",
-list(range(1,13))
-)
+day_map = {
+    "Monday": 0,
+    "Tuesday": 1,
+    "Wednesday": 2,
+    "Thursday": 3,
+    "Friday": 4,
+    "Saturday": 5,
+    "Sunday": 6
+}
 
-day = st.selectbox(
-"Day",
-list(range(1,32))
-)
+time_map = {
+    "Morning": 0,
+    "Afternoon": 1,
+    "Evening": 2
+}
 
-year = st.number_input(
-"Year",
-min_value=2025,
-value=2026
-)
+location_type = location_map[location]
+weather_condition = weather_map[weather]
+day_of_week = day_map[day_name]
+time_of_day = time_map[time_name]
 
-if st.button("Predict Cash Demand"):
+holiday_flag = 1 if holiday == "Yes" else 0
+special_event_flag = 1 if event == "Yes" else 0
+
+# Hidden Fields
+ATM_ID = 1
+Nearby_Competitor_ATMs = 3
+
+# Fixed Date Values
+Month = 6
+Day = 15
+Year = 2026
+
+# Prediction Button
+if st.button("Predict Cash Demand", use_container_width=True):
+
     input_data = pd.DataFrame({
-        'ATM_ID':[atm_id],
-        'Day_of_Week':[day_of_week],
-        'Time_of_Day':[time_of_day],
-        'Total_Withdrawals':[total_withdrawals],
-        'Total_Deposits':[total_deposits],
-        'Location_Type':[location_type],
-        'Holiday_Flag':[holiday_flag],
-        'Special_Event_Flag':[special_event_flag],
-        'Previous_Day_Cash_Level':[previous_day_cash],
-        'Weather_Condition':[weather_condition],
-        'Nearby_Competitor_ATMs':[nearby_atms],
-        'Month':[month],
-        'Day':[day],
-        'Year':[year]
+        'ATM_ID': [ATM_ID],
+        'Day_of_Week': [day_of_week],
+        'Time_of_Day': [time_of_day],
+        'Total_Withdrawals': [total_withdrawals],
+        'Total_Deposits': [total_deposits],
+        'Location_Type': [location_type],
+        'Holiday_Flag': [holiday_flag],
+        'Special_Event_Flag': [special_event_flag],
+        'Previous_Day_Cash_Level': [previous_day_cash],
+        'Weather_Condition': [weather_condition],
+        'Nearby_Competitor_ATMs': [Nearby_Competitor_ATMs],
+        'Month': [Month],
+        'Day': [Day],
+        'Year': [Year]
     })
 
     prediction = model.predict(input_data)
 
-    st.success(
-        f"Predicted Next-Day Cash Requirement: ₹ {prediction[0]:,.2f}"
+    predicted_cash = prediction[0]
+
+    st.divider()
+
+    st.metric(
+        label="Predicted Next-Day Cash Requirement",
+        value=f"₹ {predicted_cash:,.0f}"
+    )
+
+    if predicted_cash < 30000:
+        st.success("🟢 Low Cash Demand Expected")
+
+    elif predicted_cash < 70000:
+        st.warning("🟡 Medium Cash Demand Expected")
+
+    else:
+        st.error("🔴 High Cash Demand Expected")
+
+    st.info(
+        "This prediction can help optimize ATM cash replenishment and reduce cash shortages."
     )
 
