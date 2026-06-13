@@ -23,7 +23,10 @@ st.write("Predict future ATM cash requirements using Machine Learning")
 # Inputs
 ATM_ID = st.number_input("ATM ID", min_value=1)
 
-Location_Type = st.number_input("Location Type")
+Location_Type = st.selectbox(
+    "Location Type",
+    ["Urban", "Semi-Urban", "Rural"]
+)
 Day_of_Week = st.number_input("Day of Week")
 Holiday_Flag = st.number_input("Holiday Flag (0/1)")
 Special_Event_Flag = st.number_input("Special Event Flag (0/1)")
