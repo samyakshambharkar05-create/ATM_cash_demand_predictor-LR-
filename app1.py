@@ -18,25 +18,22 @@ model = pickle.load(open('atm_cash_predictor.pkl', 'rb'))
 st.title("🏦 ATM Cash Demand Predictor")
 st.write("Predict future ATM cash requirements using Machine Learning")
 
+
 # Inputs
 ATM_ID = st.number_input("ATM ID", min_value=1)
-
+Day_of_Week = st.number_input("Day of Week")
+Time_of_Day = st.number_input("Time of Day")
+Total_Withdrawals = st.number_input("Total Withdrawals")
+Total_Deposits = st.number_input("Total Deposits")
 Location_Type = st.selectbox(
     "Location Type",
     ["Urban", "Semi-Urban", "Rural"]
 )
-Day_of_Week = st.number_input("Day of Week")
 Holiday_Flag = st.number_input("Holiday Flag (0/1)")
 Special_Event_Flag = st.number_input("Special Event Flag (0/1)")
-Time_of_Day = st.number_input("Time of Day")
-Weather_Condition = st.number_input("Weather Condition")
-
-Total_Withdrawals = st.number_input("Total Withdrawals")
-Total_Deposits = st.number_input("Total Deposits")
-
-Nearby_Competitor_ATMs = st.number_input("Nearby Competitor ATMs")
 Previous_Day_Cash_Level = st.number_input("Previous Day Cash Level")
-
+Weather_Condition = st.number_input("Weather Condition")
+Nearby_Competitor_ATMs = st.number_input("Nearby Competitor ATMs")
 Month = st.number_input("Month", min_value=1, max_value=12)
 Day = st.number_input("Day", min_value=1, max_value=31)
 Year = st.number_input("Year", min_value=2024)
