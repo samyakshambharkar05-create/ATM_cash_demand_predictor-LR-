@@ -34,6 +34,7 @@ Special_Event_Flag = st.number_input("Special Event Flag (0/1)")
 Previous_Day_Cash_Level = st.number_input("Previous Day Cash Level")
 Weather_Condition = st.number_input("Weather Condition")
 Nearby_Competitor_ATMs = st.number_input("Nearby Competitor ATMs")
+
 Month = st.number_input("Month", min_value=1, max_value=12)
 Day = st.number_input("Day", min_value=1, max_value=31)
 Year = st.number_input("Year", min_value=2024)
@@ -43,16 +44,17 @@ if st.button("Predict Cash Demand"):
 
     input_data = pd.DataFrame({
         'ATM_ID':[ATM_ID],
-        'Location_Type':[Location_Type],
         'Day_of_Week':[Day_of_Week],
-        'Holiday_Flag':[Holiday_Flag],
-        'Special_Event_Flag':[Special_Event_Flag],
         'Time_of_Day':[Time_of_Day],
-        'Weather_Condition':[Weather_Condition],
         'Total_Withdrawals':[Total_Withdrawals],
         'Total_Deposits':[Total_Deposits],
-        'Nearby_Competitor_ATMs':[Nearby_Competitor_ATMs],
+        'Location_Type':[Location_Type],
+        'Holiday_Flag':[Holiday_Flag],
+        'Special_Event_Flag':[Special_Event_Flag],
         'Previous_Day_Cash_Level':[Previous_Day_Cash_Level],
+        'Weather_Condition':[Weather_Condition],
+        'Nearby_Competitor_ATMs':[Nearby_Competitor_ATMs],
+        
         'Month':[Month],
         'Day':[Day],
         'Year':[Year]
