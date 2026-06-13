@@ -67,9 +67,6 @@ Project Workflow
 ## Results and Discussion
 ```
 Four Machine Learning models were evaluated and compared.
-
-<img width="848" height="273" alt="image" src="https://github.com/user-attachments/assets/33da88f0-d24e-4a3f-a16f-796c59a6df79" />
-
 The Linear Regression model achieved the highest R² score of approximately 87.12%, indicating strong predictive performance. The model successfully captured relationships between ATM operational factors and future cash demand.
 
 The deployed Streamlit application enables users to provide ATM-related inputs and instantly receive cash demand predictions. The project demonstrates the practical application of Machine Learning in banking operations and resource optimization.
